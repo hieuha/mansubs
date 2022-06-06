@@ -107,3 +107,27 @@ func (d Database) updateTech(db *sql.DB, subdomain string, technology string) er
 	}
 	return nil
 }
+
+func (d Database) searchTargetByTech(db *sql.DB, tech string) ([]Target, error) {
+	var targets []Target
+	query := `SELECT "id", "domain", "subdomain", "technology" FROM "targets" WHERE "technology" LIKE ? ORDER BY "id"`
+
+	statement, err := db.Prepare(query)
+	if err != nil {
+		return targets, err
+	}
+	tech = fmt.Sprintf("%%%s%%", tech)
+	rows, err := statement.Query(tech)
+	if err != nil {
+		return targets, err
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var target = Target{}
+		rows.Scan(&target.Id, &target.Domain, &target.Subdomain, &target.Technology)
+		targets = append(targets, target)
+	}
+
+	return targets, nil
+}

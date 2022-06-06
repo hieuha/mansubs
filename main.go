@@ -12,14 +12,19 @@ import (
 func main() {
 	var domain string
 	var techFile string
+	var techSearch string
 	var isCreate bool
 	var isDump bool
 	var isUpdateTech bool
+	var isSearchTech bool
 	flag.StringVar(&domain, "domain", "", "-domain")
 	flag.BoolVar(&isCreate, "create", false, "-create")
 	flag.BoolVar(&isDump, "dump", false, "-dump")
 	flag.BoolVar(&isUpdateTech, "update-tech", false, "-update-tech")
-	flag.StringVar(&techFile, "tech-file", "tech.txt", "-tech-file")
+	flag.BoolVar(&isSearchTech, "search", false, "-search")
+	flag.StringVar(&techSearch, "tech-search", "", "-tech-search")
+	flag.StringVar(&techFile, "tech-file", "", "-tech-file")
+
 	domain = strings.ToLower(domain)
 	flag.Parse()
 
@@ -63,6 +68,17 @@ func main() {
 			if err != nil {
 				fmt.Println(err)
 			}
+		}
+	}
+
+	if isSearchTech {
+		techSearch = strings.TrimSpace(strings.ToLower(techSearch))
+		targets, err := database.searchTargetByTech(db, techSearch)
+		if err != nil {
+			fmt.Println(err)
+		}
+		for _, target := range targets {
+			fmt.Println(target.Subdomain)
 		}
 	}
 
