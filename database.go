@@ -34,7 +34,8 @@ func (d Database) createTableTargets(db *sql.DB) error {
 		"domain" VARCHAR(255) NULL,
 		"subdomain" VARCHAR(255) NULL,
 		"technology" VARCHAR(255) NULL,
-		"created" DATETIME
+		"created" DATETIME,
+		unique (domain, subdomain)
 	);
 	`
 	statement, err := db.Prepare(createTargetsTableSQL)
@@ -59,4 +60,28 @@ func (d Database) addTarget(db *sql.DB, target Target) error {
 		fmt.Println("Added", target)
 	}
 	return err
+}
+
+func (d Database) getTargets(db *sql.DB, domain string) error {
+	query := `SELECT "subdomain", "technology" FROM "targets" WHERE "domain" = ? ORDER BY "subdomain"`
+	statement, err := db.Prepare(query)
+	if err != nil {
+		return err
+	}
+
+	rows, err := statement.Query(domain)
+
+	if err != nil {
+		return err
+	}
+
+	defer rows.Close()
+	for rows.Next() { // Iterate and fetch the records from result cursor
+		var subdomain string
+		var technology string
+		rows.Scan(&subdomain, &technology)
+		fmt.Println(subdomain, technology)
+	}
+
+	return nil
 }

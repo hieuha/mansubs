@@ -12,8 +12,10 @@ import (
 func main() {
 	var domain string
 	var isCreate bool
-	flag.StringVar(&domain, "domain", "", "domain")
-	flag.BoolVar(&isCreate, "create", false, "method")
+	var isDump bool
+	flag.StringVar(&domain, "domain", "", "-domain")
+	flag.BoolVar(&isCreate, "create", false, "-create")
+	flag.BoolVar(&isDump, "dump", true, "-dump")
 	domain = strings.ToLower(domain)
 	flag.Parse()
 
@@ -30,14 +32,15 @@ func main() {
 		sc := bufio.NewScanner(os.Stdin)
 		for sc.Scan() {
 			subdomain := strings.ToLower(sc.Text())
-			if !strings.Contains(subdomain, "@") {
+			if !strings.Contains(subdomain, "@") && !strings.Contains(subdomain, "--") {
 				target := Target{Domain: domain, Subdomain: subdomain}
-				err = database.addTarget(db, target)
-				if err != nil {
-					fmt.Println(err)
-				}
+				database.addTarget(db, target)
 			}
 		}
+	}
+
+	if isDump {
+		database.getTargets(db, domain)
 	}
 
 }
