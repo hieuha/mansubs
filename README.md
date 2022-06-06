@@ -3,7 +3,7 @@ Take a list of domains and add to a SQLite database for easy managing
 
 ## Install
 ```
-go get install -v 
+go install -v github.com/hieuha/mansubs@latest
 ```
 
 ## Basic Usage
