@@ -80,7 +80,6 @@ func (d Database) getTargets(db *sql.DB, domain string) ([]Target, error) {
 	for rows.Next() {
 		var target = Target{}
 		rows.Scan(&target.Id, &target.Domain, &target.Subdomain, &target.Technology)
-		fmt.Println(target)
 		targets = append(targets, target)
 	}
 

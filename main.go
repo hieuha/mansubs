@@ -42,7 +42,14 @@ func main() {
 	}
 
 	if isDump {
-		database.getTargets(db, domain)
+		targets, err := database.getTargets(db, domain)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		for _, target := range targets {
+			fmt.Println(target.Subdomain)
+		}
 	}
 
 	if isUpdateTech {
