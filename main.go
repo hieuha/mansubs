@@ -11,6 +11,7 @@ import (
 
 func main() {
 	var domain string
+	var techFile string
 	var isCreate bool
 	var isDump bool
 	var isUpdateTech bool
@@ -18,6 +19,7 @@ func main() {
 	flag.BoolVar(&isCreate, "create", false, "-create")
 	flag.BoolVar(&isDump, "dump", false, "-dump")
 	flag.BoolVar(&isUpdateTech, "update-tech", false, "-update-tech")
+	flag.StringVar(&techFile, "tech-file", "tech.txt", "-tech-file")
 	domain = strings.ToLower(domain)
 	flag.Parse()
 
@@ -53,12 +55,11 @@ func main() {
 	}
 
 	if isUpdateTech {
-		targets, err := database.getTargets(db, domain)
-		if err != nil {
-			fmt.Println(err)
-		}
+		database.cleanTech(db)
+		targets := parseTech("tech.txt")
 		for _, target := range targets {
-			err := database.updateTech(db, target.Id, "Web")
+			fmt.Println(target)
+			err := database.updateTech(db, target.Subdomain, target.Technology)
 			if err != nil {
 				fmt.Println(err)
 			}
