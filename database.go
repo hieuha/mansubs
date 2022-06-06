@@ -86,13 +86,22 @@ func (d Database) getTargets(db *sql.DB, domain string) ([]Target, error) {
 	return targets, nil
 }
 
-func (d Database) updateTech(db *sql.DB, id int, technology string) error {
-	query := `UPDATE "targets" SET "technology" = ? WHERE "id" = ?`
+func (d Database) cleanTech(db *sql.DB) {
+	queryClean := `UPDATE "targets" SET "technology" = ""`
+	statementClean, err := db.Prepare(queryClean)
+	_, err = statementClean.Exec()
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func (d Database) updateTech(db *sql.DB, subdomain string, technology string) error {
+	query := `UPDATE "targets" SET "technology" = technology || ? WHERE "subdomain" = ?`
 	statement, err := db.Prepare(query)
 	if err != nil {
 		return err
 	}
-	_, err = statement.Exec(technology, id)
+	_, err = statement.Exec(fmt.Sprintf("%s,", technology), subdomain)
 	if err != nil {
 		return err
 	}
