@@ -8,5 +8,5 @@ go get install -v
 
 ## Basic Usage
 ```
-ho -n 'mcafee.com' | assetfinder -subs-only | mansubs -create 
+echo -n 'mcafee.com' | assetfinder -subs-only | mansubs -create 
 ```
