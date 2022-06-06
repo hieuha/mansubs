@@ -21,3 +21,7 @@ mansubs -dump -domain mcafee.com |httpx -t 100 -silent|~/osmedeus-base/binaries/
 mansubs -update-tech -domain mcafee.com -tech-file tech.txt
 
 ```
+
+```
+mansubs -search -tech-search nginx
+```
