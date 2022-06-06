@@ -64,7 +64,7 @@ func (d Database) addTarget(db *sql.DB, target Target) error {
 
 func (d Database) getTargets(db *sql.DB, domain string) ([]Target, error) {
 	var targets []Target
-	query := `SELECT "domain", "subdomain", "technology" FROM "targets" WHERE "domain" = ? ORDER BY "subdomain"`
+	query := `SELECT "id", "domain", "subdomain", "technology" FROM "targets" WHERE "domain" = ? ORDER BY "id"`
 	statement, err := db.Prepare(query)
 	if err != nil {
 		return targets, err
@@ -79,10 +79,23 @@ func (d Database) getTargets(db *sql.DB, domain string) ([]Target, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var target = Target{}
-		rows.Scan(&target.Domain, &target.Subdomain, &target.Technology)
+		rows.Scan(&target.Id, &target.Domain, &target.Subdomain, &target.Technology)
 		fmt.Println(target)
 		targets = append(targets, target)
 	}
 
 	return targets, nil
+}
+
+func (d Database) updateTech(db *sql.DB, id int, technology string) error {
+	query := `UPDATE "targets" SET "technology" = ? WHERE "id" = ?`
+	statement, err := db.Prepare(query)
+	if err != nil {
+		return err
+	}
+	_, err = statement.Exec(technology, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -13,9 +13,11 @@ func main() {
 	var domain string
 	var isCreate bool
 	var isDump bool
+	var isUpdateTech bool
 	flag.StringVar(&domain, "domain", "", "-domain")
 	flag.BoolVar(&isCreate, "create", false, "-create")
-	flag.BoolVar(&isDump, "dump", true, "-dump")
+	flag.BoolVar(&isDump, "dump", false, "-dump")
+	flag.BoolVar(&isUpdateTech, "update-tech", false, "-update-tech")
 	domain = strings.ToLower(domain)
 	flag.Parse()
 
@@ -41,6 +43,19 @@ func main() {
 
 	if isDump {
 		database.getTargets(db, domain)
+	}
+
+	if isUpdateTech {
+		targets, err := database.getTargets(db, domain)
+		if err != nil {
+			fmt.Println(err)
+		}
+		for _, target := range targets {
+			err := database.updateTech(db, target.Id, "Web")
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
 	}
 
 }
