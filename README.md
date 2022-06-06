@@ -12,5 +12,9 @@ echo -n 'mcafee.com' | assetfinder -subs-only | mansubs -domain mcafee.com -crea
 ```
 
 ```
-mansubs -domain mcafee.com -dump
+mansubs -dump -domain mcafee.com
+```
+
+```
+mansubs -update-tech -domain mcafee.com
 ```
