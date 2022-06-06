@@ -1,6 +1,5 @@
 *.txt
 *.sqlite
 .DS_Store
-go.sum
 .idea/
 mansubs
