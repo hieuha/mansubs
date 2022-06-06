@@ -62,26 +62,27 @@ func (d Database) addTarget(db *sql.DB, target Target) error {
 	return err
 }
 
-func (d Database) getTargets(db *sql.DB, domain string) error {
-	query := `SELECT "subdomain", "technology" FROM "targets" WHERE "domain" = ? ORDER BY "subdomain"`
+func (d Database) getTargets(db *sql.DB, domain string) ([]Target, error) {
+	var targets []Target
+	query := `SELECT "domain", "subdomain", "technology" FROM "targets" WHERE "domain" = ? ORDER BY "subdomain"`
 	statement, err := db.Prepare(query)
 	if err != nil {
-		return err
+		return targets, err
 	}
 
 	rows, err := statement.Query(domain)
 
 	if err != nil {
-		return err
+		return targets, err
 	}
 
 	defer rows.Close()
-	for rows.Next() { // Iterate and fetch the records from result cursor
-		var subdomain string
-		var technology string
-		rows.Scan(&subdomain, &technology)
-		fmt.Println(subdomain, technology)
+	for rows.Next() {
+		var target = Target{}
+		rows.Scan(&target.Domain, &target.Subdomain, &target.Technology)
+		fmt.Println(target)
+		targets = append(targets, target)
 	}
 
-	return nil
+	return targets, nil
 }
