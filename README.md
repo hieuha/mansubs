@@ -18,7 +18,7 @@ mansubs -dump -domain mcafee.com
 ```
 mansubs -dump -domain mcafee.com |httpx -t 100 -silent|~/osmedeus-base/binaries/webanalyze-mod -c 50 -t 10 -a ~/osmedeus-base/data/technologies.json > tech.txt 
 
-mansubs -update-tech -domain mcafee.com -tech-file tech.txt
+mansubs -update-tech -tech-file tech.txt
 
 ```
 
